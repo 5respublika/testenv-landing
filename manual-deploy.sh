@@ -3,7 +3,7 @@
 # Ручной деплой на ВМ
 # Использование: ./manual-deploy.sh
 
-VM_HOST="158.160.182.219"
+VM_HOST="158.160.186.95"
 VM_USER="developer"
 
 echo "🚀 Ручной деплой на ВМ..."
@@ -35,7 +35,7 @@ echo "   sudo tee /etc/nginx/sites-available/testenv-landing << 'EOF'"
 echo "   server {"
 echo "       listen 80;"
 echo "       server_name $VM_HOST;"
-echo "       root /var/www/testenv-landing;"
+echo "          root /var/www/testenv-landing;"
 echo "       index index.html;"
 echo "   }"
 echo "   EOF"

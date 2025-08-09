@@ -3,7 +3,7 @@
 # Скрипт для ручной загрузки файлов на ВМ
 # Использование: ./deploy.sh
 
-VM_HOST="158.160.182.219"
+VM_HOST="158.160.186.95"
 VM_USER="developer"
 VM_PATH="/var/www/testenv-landing"
 
