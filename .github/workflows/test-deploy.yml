@@ -1,0 +1,28 @@
+name: Test Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-connection:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check secrets
+      run: |
+        echo "Testing secrets configuration..."
+        echo "VM_HOST: ${{ secrets.VM_HOST }}"
+        echo "VM_USERNAME: ${{ secrets.VM_USERNAME }}"
+        echo "VM_PORT: ${{ secrets.VM_PORT }}"
+        if [ -n "${{ secrets.VM_SSH_KEY }}" ]; then
+          echo "SSH_KEY: [PRESENT]"
+        else
+          echo "SSH_KEY: [MISSING]"
+          exit 1
+        fi
+        
+    - name: Test SSH connection
+      if: secrets.VM_HOST != ''
+      run: |
+        echo "Testing connection to ${{ secrets.VM_HOST }}..."
+        timeout 10 ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no ${{ secrets.VM_USERNAME }}@${{ secrets.VM_HOST }} -p ${{ secrets.VM_PORT }} "echo 'Connection successful'"
