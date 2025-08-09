@@ -1,0 +1,43 @@
+name: Web Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Create deployment package
+      run: |
+        echo "Creating deployment package..."
+        tar -czf deploy.tar.gz index.html README.md
+        ls -la deploy.tar.gz
+        
+    - name: Upload deployment files
+      uses: actions/upload-artifact@v4
+      with:
+        name: deployment-package
+        path: deploy.tar.gz
+        
+    - name: Show deployment instructions
+      run: |
+        echo "## 🚀 Инструкции по деплою"
+        echo ""
+        echo "### 1. Скачайте файл deploy.tar.gz из артефактов"
+        echo "### 2. Загрузите его на ВМ через веб-консоль"
+        echo "### 3. Выполните на ВМ:"
+        echo "```bash"
+        echo "sudo mkdir -p /var/www/testenv-landing"
+        echo "sudo tar -xzf deploy.tar.gz -C /var/www/testenv-landing/"
+        echo "sudo chown -R www-data:www-data /var/www/testenv-landing/"
+        echo "sudo systemctl reload nginx"
+        echo "```"
+        echo ""
+        echo "### 4. Сайт будет доступен по адресу:"
+        echo "http://158.160.182.219"

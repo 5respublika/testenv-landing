@@ -1,0 +1,45 @@
+name: Simple Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Show files
+      run: |
+        echo "Files in repository:"
+        ls -la
+        
+    - name: Test connection
+      run: |
+        echo "Testing connection to VM..."
+        echo "VM_HOST: ${{ secrets.VM_HOST }}"
+        echo "VM_USERNAME: ${{ secrets.VM_USERNAME }}"
+        
+        # Простая проверка доступности
+        if [ -n "${{ secrets.VM_HOST }}" ]; then
+          echo "Host is configured"
+          ping -c 3 ${{ secrets.VM_HOST }} || echo "Host not reachable"
+        else
+          echo "Host not configured"
+        fi
+        
+    - name: Create deployment package
+      run: |
+        echo "Creating deployment package..."
+        tar -czf deploy.tar.gz index.html README.md
+        ls -la deploy.tar.gz
+        
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: deployment-files
+        path: deploy.tar.gz
